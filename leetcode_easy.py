@@ -1372,34 +1372,36 @@ class Solution:
         return list(map(lambda a: int(a), listofstring))
 
 
-#125
+###########################################################
+# 125. Valid Palindrome
+
 class Solution:
     def isPalindrome(self, s: str) -> bool:
         first = 0
         s = s.strip()
         string = ""
-        for char in s: 
-            if char.isalnum(): 
+        for char in s:
+            if char.isalnum():
                 string += char
-        
+
         last = len(string) - 1
 
-        while first < last: 
-            if not string[first].isalnum(): 
+        while first < last:
+            if not string[first].isalnum():
                 first += 1
             elif not string[first].isalnum():
                 last -= 1
-            elif string[first].lower() == string[last].lower(): 
+            elif string[first].lower() == string[last].lower():
                 first += 1
                 last -= 1
-            else: 
+            else:
                 return False
-        
+
         return True
-    
 
+###########################################################
+# 344. Reverse String
 
-#344
 class Solution:
     def reverseString(self, s: List[str]) -> None:
         """
@@ -1407,178 +1409,198 @@ class Solution:
         """
         s[:] = s[::-1]
 
+###########################################################
+# 8. String to Integer (atoi)
 
-#8
+# Placeholder for the corresponding solution block.
 
+###########################################################
+# 342. Power of Four
 
-
-# 342
 import math
+
+
 class Solution:
     def isPowerOfFour(self, n: int) -> bool:
-        if n <= 0: 
+        if n <= 0:
             return False
         logn = math.log(n)
         ln4 = math.log(4)
-        if int(logn/ln4) == (logn/ln4): 
+        if int(logn / ln4) == (logn / ln4):
             return True
-        else: return False
-        
-        
-# 326
+        else:
+            return False
+
+###########################################################
+# 326. Power of Three
 
 
 class Solution:
     def isPowerOfThree(self, n: int) -> bool:
-        if n <= 0: 
+        if n <= 0:
             return False
-        while n % 3 == 0: 
+        while n % 3 == 0:
             n = n / 3
         return n == 1
 
-        
+###########################################################
+# 392. Is Subsequence
+
 
 class Solution:
-    def isSubsequence(s: str, t: str) -> bool:
+    def isSubsequence(self, s: str, t: str) -> bool:
         indices = []
         findin = t
 
-        for i in range(len(s)): 
+        for i in range(len(s)):
             index = findin.find(s[i])
 
-            if index == -1: return False
+            if index == -1:
+                return False
 
             indices.append(index)
-            findin = findin[index+1:]
-        
+            findin = findin[index + 1:]
+
         return True
 
+###########################################################
+# 263. Ugly Number
 
 
 class Solution:
     def isUgly(self, n: int) -> bool:
 
-        if n <= 0: 
+        if n <= 0:
             return False
 
         isdivisible = True
 
-        while isdivisible: 
-            
-            if n % 2 == 0: 
-                n = n/2
-            elif n % 3 == 0: 
-                n = n/3
-            elif n % 5 == 0: 
-                n = n/5
-            else: 
+        while isdivisible:
+
+            if n % 2 == 0:
+                n = n / 2
+            elif n % 3 == 0:
+                n = n / 3
+            elif n % 5 == 0:
+                n = n / 5
+            else:
                 isdivisible = False
         return n == 1
-        
+
+###########################################################
+# 202. Happy Number
+
 
 class Solution:
     def isHappy(self, n: int) -> bool:
         n = str(n)
 
-        def sumdigs(string): 
-            listofdigs = list(string) 
+        def sumdigs(string):
+            listofdigs = list(string)
             cursum = 0
-            for digit in listofdigs: 
-                cursum += int(digit)**2
+            for digit in listofdigs:
+                cursum += int(digit) ** 2
             return str(cursum)
 
         sums = set()
         cursum = sumdigs(n)
 
-        if cursum == "1": 
+        if cursum == "1":
             return True
-        
-        while cursum not in sums: 
-            if cursum == "1": 
+
+        while cursum not in sums:
+            if cursum == "1":
                 return True
             sums.add(cursum)
             cursum = sumdigs(cursum)
-        
+
         return False
+
+###########################################################
+# 345. Reverse Vowels of a String
 
 
 class Solution:
     def reverseVowels(self, s: str) -> str:
         vindices = []
         vpres = []
-        vowels = "aeiouAEIOU" 
-        for i in range(len(s)): 
-            if s[i] in vowels: 
+        vowels = "aeiouAEIOU"
+        for i in range(len(s)):
+            if s[i] in vowels:
                 vpres.append(s[i])
-                vindices.append(i) 
+                vindices.append(i)
 
         vpres = vpres[::-1]
-        slist = list(s) 
-        for i in range(len(vindices)): 
+        slist = list(s)
+        for i in range(len(vindices)):
             slist[vindices[i]] = vpres[i]
-        
+
         return "".join(slist)
 
+###########################################################
+# 1502. Can Make Arithmetic Progression From Sequence
 
-        
+
 class Solution:
     def canMakeArithmeticProgression(self, arr: List[int]) -> bool:
-        n = len(arr) 
+        n = len(arr)
         diffs = set()
         arr.sort()
-        for i in range(n-1): 
-            diffs.add(arr[i] - arr[i+1])
+        for i in range(n - 1):
+            diffs.add(arr[i] - arr[i + 1])
         return len(diffs) == 1
+
+###########################################################
+# 2485. Find Pivot Integer
+
 
 class Solution:
     def pivotInteger(self, n: int) -> int:
-        total = n * (n+1) * 0.5
+        total = n * (n + 1) * 0.5
 
-        if n <= 0: 
+        if n <= 0:
             return -1
-        if n == 1: 
+        if n == 1:
             return 1
 
-        for i in range(1, n+1): 
-            backsum = i * (i+1) * 0.5
+        for i in range(1, n + 1):
+            backsum = i * (i + 1) * 0.5
             aftersum = total - backsum + i
-            if aftersum == backsum: 
+            if aftersum == backsum:
                 return i
         return -1
+
+###########################################################
+# 728. Self Dividing Numbers
 
 
 class Solution:
     def selfDividingNumbers(self, left: int, right: int) -> List[int]:
-        def verifier(num): 
+        def verifier(num):
             digits = list(str(num))
-            if "0" in digits: 
+            if "0" in digits:
                 return False
-            for digit in digits: 
-                digint = int(digit) 
-                if num % digint != 0: 
+            for digit in digits:
+                digint = int(digit)
+                if num % digint != 0:
                     return False
             return True
-        rangee = range(left, right + 1) 
 
+        rangee = range(left, right + 1)
         lst = list(filter(verifier, rangee))
 
         return lst
-    
+
+###########################################################
+# 1015. Smallest Integer Divisible by K
 
 class Solution:
     def smallestRepunitDivByK(self, k: int) -> int:
-        if k % 2 == 0 or k % 5 == 0: return -1
+        if k % 2 == 0 or k % 5 == 0:
+            return -1
         rem = 0
         for i in range(k):
             rem = (rem * 10 + 1) % k
-            if rem == 0: return i + 1
-        return -1
-
-class Solution:
-    def smallestRepunitDivByK(self, k: int) -> int:
-        if k % 2 == 0 or k % 5 == 0: return -1
-        rem = 0
-        for i in range(k):
-            rem = (rem * 10 + 1) % k
-            if rem == 0: return i + 1
+            if rem == 0:
+                return i + 1
         return -1
