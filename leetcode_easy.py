@@ -1604,3 +1604,810 @@ class Solution:
             if rem == 0:
                 return i + 1
         return -1
+
+###########################################################
+# 20. Valid Parentheses
+
+class Solution:
+    def isValid(self, s: str) -> bool:
+        pairs = {')': '(', ']': '[', '}': '{'}
+        stack = []
+        for ch in s:
+            if ch in pairs:
+                if not stack or stack.pop() != pairs[ch]:
+                    return False
+            else:
+                stack.append(ch)
+        return not stack
+
+
+###########################################################
+# 21. Merge Two Sorted Lists
+
+class Solution:
+    def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
+        dummy = tail = ListNode()
+        while list1 and list2:
+            if list1.val <= list2.val:
+                tail.next = list1
+                list1 = list1.next
+            else:
+                tail.next = list2
+                list2 = list2.next
+            tail = tail.next
+        tail.next = list1 or list2
+        return dummy.next
+
+
+###########################################################
+# 35. Search Insert Position
+
+class Solution:
+    def searchInsert(self, nums: List[int], target: int) -> int:
+        lo, hi = 0, len(nums) - 1
+        while lo <= hi:
+            mid = (lo + hi) // 2
+            if nums[mid] == target:
+                return mid
+            elif nums[mid] < target:
+                lo = mid + 1
+            else:
+                hi = mid - 1
+        return lo
+
+
+###########################################################
+# 67. Add Binary
+
+class Solution:
+    def addBinary(self, a: str, b: str) -> str:
+        i, j = len(a) - 1, len(b) - 1
+        carry = 0
+        result = []
+        while i >= 0 or j >= 0 or carry:
+            total = carry
+            if i >= 0:
+                total += int(a[i])
+                i -= 1
+            if j >= 0:
+                total += int(b[j])
+                j -= 1
+            result.append(str(total % 2))
+            carry = total // 2
+        return "".join(reversed(result))
+
+
+###########################################################
+# 70. Climbing Stairs
+
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        one, two = 1, 1
+        for _ in range(n - 1):
+            one, two = one + two, one
+        return one
+
+
+###########################################################
+# 83. Remove Duplicates from Sorted List
+
+class Solution:
+    def deleteDuplicates(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        cur = head
+        while cur and cur.next:
+            if cur.val == cur.next.val:
+                cur.next = cur.next.next
+            else:
+                cur = cur.next
+        return head
+
+
+###########################################################
+# 121. Best Time to Buy and Sell Stock
+
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        min_price = float("inf")
+        best = 0
+        for price in prices:
+            min_price = min(min_price, price)
+            best = max(best, price - min_price)
+        return best
+
+
+###########################################################
+# 205. Isomorphic Strings
+
+class Solution:
+    def isIsomorphic(self, s: str, t: str) -> bool:
+        s_to_t = {}
+        t_to_s = {}
+        for a, b in zip(s, t):
+            if s_to_t.get(a, b) != b or t_to_s.get(b, a) != a:
+                return False
+            s_to_t[a] = b
+            t_to_s[b] = a
+        return True
+
+
+###########################################################
+# 290. Word Pattern
+
+class Solution:
+    def wordPattern(self, pattern: str, s: str) -> bool:
+        words = s.split()
+        if len(words) != len(pattern):
+            return False
+        p_to_w = {}
+        w_to_p = {}
+        for p, w in zip(pattern, words):
+            if p_to_w.get(p, w) != w or w_to_p.get(w, p) != p:
+                return False
+            p_to_w[p] = w
+            w_to_p[w] = p
+        return True
+
+
+###########################################################
+# 94. Binary Tree Inorder Traversal
+
+class Solution:
+    def inorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
+        result = []
+
+        def inorder(node):
+            if not node:
+                return
+            inorder(node.left)
+            result.append(node.val)
+            inorder(node.right)
+
+        inorder(root)
+        return result
+
+
+###########################################################
+# 100. Same Tree
+
+class Solution:
+    def isSameTree(self, p: Optional[TreeNode], q: Optional[TreeNode]) -> bool:
+        if not p and not q:
+            return True
+        if not p or not q:
+            return False
+        if p.val != q.val:
+            return False
+        return self.isSameTree(p.left, q.left) and self.isSameTree(p.right, q.right)
+
+
+###########################################################
+# 101. Symmetric Tree
+
+class Solution:
+    def isSymmetric(self, root: Optional[TreeNode]) -> bool:
+        def mirror(a, b):
+            if not a and not b:
+                return True
+            if not a or not b:
+                return False
+            # outside pair and inside pair must both match
+            return a.val == b.val and mirror(a.left, b.right) and mirror(a.right, b.left)
+
+        return mirror(root.left, root.right)
+
+
+###########################################################
+# 104. Maximum Depth of Binary Tree
+
+class Solution:
+    def maxDepth(self, root: Optional[TreeNode]) -> int:
+        if not root:
+            return 0
+        return 1 + max(self.maxDepth(root.left), self.maxDepth(root.right))
+
+
+###########################################################
+# 110. Balanced Binary Tree
+
+class Solution:
+    def isBalanced(self, root: Optional[TreeNode]) -> bool:
+        def height(node):
+            if not node:
+                return 0
+            return 1 + max(height(node.left), height(node.right))
+
+        if not root:
+            return True
+        if abs(height(root.left) - height(root.right)) > 1:
+            return False
+        return self.isBalanced(root.left) and self.isBalanced(root.right)
+
+
+###########################################################
+# 111. Minimum Depth of Binary Tree
+
+class Solution:
+    def minDepth(self, root: Optional[TreeNode]) -> int:
+        if not root:
+            return 0
+        # if one side is missing, the path has to go down the other side
+        if not root.left:
+            return 1 + self.minDepth(root.right)
+        if not root.right:
+            return 1 + self.minDepth(root.left)
+        return 1 + min(self.minDepth(root.left), self.minDepth(root.right))
+
+
+###########################################################
+# 112. Path Sum
+
+class Solution:
+    def hasPathSum(self, root: Optional[TreeNode], targetSum: int) -> bool:
+        if not root:
+            return False
+        remaining = targetSum - root.val
+        # a leaf node
+        if not root.left and not root.right:
+            return remaining == 0
+        return self.hasPathSum(root.left, remaining) or self.hasPathSum(root.right, remaining)
+
+
+###########################################################
+# 171. Excel Sheet Column Number
+
+class Solution:
+    def titleToNumber(self, columnTitle: str) -> int:
+        letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        number = 0
+        for char in columnTitle:
+            number = number * 26 + (letters.find(char) + 1)
+        return number
+
+
+###########################################################
+# 206. Reverse Linked List
+
+class Solution:
+    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        prev = None
+        cur = head
+        while cur:
+            nextnode = cur.next
+            cur.next = prev
+            prev = cur
+            cur = nextnode
+        return prev
+
+
+###########################################################
+# 108. Convert Sorted Array to Binary Search Tree
+
+class Solution:
+    def sortedArrayToBST(self, nums: List[int]) -> Optional[TreeNode]:
+        if not nums:
+            return None
+        # middle element becomes the root so both sides are balanced
+        mid = len(nums) // 2
+        root = TreeNode(nums[mid])
+        root.left = self.sortedArrayToBST(nums[:mid])
+        root.right = self.sortedArrayToBST(nums[mid + 1:])
+        return root
+
+
+###########################################################
+# 141. Linked List Cycle
+
+class Solution:
+    def hasCycle(self, head: Optional[ListNode]) -> bool:
+        visited = set()
+        cur = head
+        while cur:
+            if cur in visited:
+                return True
+            visited.add(cur)
+            cur = cur.next
+        return False
+
+
+###########################################################
+# 144. Binary Tree Preorder Traversal
+
+class Solution:
+    def preorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
+        result = []
+
+        def preorder(node):
+            if not node:
+                return
+            result.append(node.val)
+            preorder(node.left)
+            preorder(node.right)
+
+        preorder(root)
+        return result
+
+
+###########################################################
+# 145. Binary Tree Postorder Traversal
+
+class Solution:
+    def postorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
+        result = []
+
+        def postorder(node):
+            if not node:
+                return
+            postorder(node.left)
+            postorder(node.right)
+            result.append(node.val)
+
+        postorder(root)
+        return result
+
+
+###########################################################
+# 160. Intersection of Two Linked Lists
+
+class Solution:
+    def getIntersectionNode(self, headA: ListNode, headB: ListNode) -> Optional[ListNode]:
+        nodes_in_a = set()
+        cur = headA
+        while cur:
+            nodes_in_a.add(cur)
+            cur = cur.next
+
+        cur = headB
+        while cur:
+            if cur in nodes_in_a:
+                return cur
+            cur = cur.next
+        return None
+
+
+###########################################################
+# 168. Excel Sheet Column Title
+
+class Solution:
+    def convertToTitle(self, columnNumber: int) -> str:
+        letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        title = ""
+        while columnNumber > 0:
+            # subtract 1 because A is 1 not 0
+            columnNumber -= 1
+            title = letters[columnNumber % 26] + title
+            columnNumber = columnNumber // 26
+        return title
+
+
+###########################################################
+# 190. Reverse Bits
+
+class Solution:
+    def reverseBits(self, n: int) -> int:
+        bits = format(n, "032b")
+        return int(bits[::-1], 2)
+
+
+###########################################################
+# 191. Number of 1 Bits
+
+class Solution:
+    def hammingWeight(self, n: int) -> int:
+        return bin(n).count("1")
+
+
+###########################################################
+# 203. Remove Linked List Elements
+
+class Solution:
+    def removeElements(self, head: Optional[ListNode], val: int) -> Optional[ListNode]:
+        dummy = ListNode(0, head)
+        cur = dummy
+        while cur.next:
+            if cur.next.val == val:
+                cur.next = cur.next.next
+            else:
+                cur = cur.next
+        return dummy.next
+
+
+###########################################################
+# 225. Implement Stack using Queues
+
+from collections import deque
+
+class MyStack:
+
+    def __init__(self):
+        self.queue = deque()
+
+    def push(self, x: int) -> None:
+        # add to the back, then move everything in front of it behind it
+        self.queue.append(x)
+        for i in range(len(self.queue) - 1):
+            self.queue.append(self.queue.popleft())
+
+    def pop(self) -> int:
+        return self.queue.popleft()
+
+    def top(self) -> int:
+        return self.queue[0]
+
+    def empty(self) -> bool:
+        return len(self.queue) == 0
+
+
+###########################################################
+# 226. Invert Binary Tree
+
+class Solution:
+    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        if not root:
+            return None
+        # swap the children, then invert each side
+        root.left, root.right = root.right, root.left
+        self.invertTree(root.left)
+        self.invertTree(root.right)
+        return root
+
+
+###########################################################
+# 228. Summary Ranges
+
+class Solution:
+    def summaryRanges(self, nums: List[int]) -> List[str]:
+        result = []
+        i = 0
+        n = len(nums)
+        while i < n:
+            start = nums[i]
+            # keep going while the next number is one more
+            while i + 1 < n and nums[i + 1] == nums[i] + 1:
+                i += 1
+            end = nums[i]
+            if start == end:
+                result.append(str(start))
+            else:
+                result.append(str(start) + "->" + str(end))
+            i += 1
+        return result
+
+
+###########################################################
+# 232. Implement Queue using Stacks
+
+class MyQueue:
+
+    def __init__(self):
+        self.instack = []
+        self.outstack = []
+
+    def push(self, x: int) -> None:
+        self.instack.append(x)
+
+    def move(self):
+        # only refill the out stack when it is empty, this reverses the order
+        if not self.outstack:
+            while self.instack:
+                self.outstack.append(self.instack.pop())
+
+    def pop(self) -> int:
+        self.move()
+        return self.outstack.pop()
+
+    def peek(self) -> int:
+        self.move()
+        return self.outstack[-1]
+
+    def empty(self) -> bool:
+        return not self.instack and not self.outstack
+
+
+###########################################################
+# 234. Palindrome Linked List
+
+class Solution:
+    def isPalindrome(self, head: Optional[ListNode]) -> bool:
+        values = []
+        cur = head
+        while cur:
+            values.append(cur.val)
+            cur = cur.next
+        return values == values[::-1]
+
+
+###########################################################
+# 257. Binary Tree Paths
+
+class Solution:
+    def binaryTreePaths(self, root: Optional[TreeNode]) -> List[str]:
+        result = []
+
+        def walk(node, path):
+            if not node:
+                return
+            path = path + str(node.val)
+            # a leaf node, the path is complete
+            if not node.left and not node.right:
+                result.append(path)
+                return
+            walk(node.left, path + "->")
+            walk(node.right, path + "->")
+
+        walk(root, "")
+        return result
+
+
+###########################################################
+# 278. First Bad Version
+
+class Solution:
+    def firstBadVersion(self, n: int) -> int:
+        first = 1
+        last = n
+        while first < last:
+            mid = (first + last) // 2
+            if isBadVersion(mid):
+                last = mid
+            else:
+                first = mid + 1
+        return first
+
+
+###########################################################
+# 292. Nim Game
+
+class Solution:
+    def canWinNim(self, n: int) -> bool:
+        # if n is a multiple of 4 the opponent can always leave a multiple of 4
+        return n % 4 != 0
+
+
+###########################################################
+# 303. Range Sum Query - Immutable
+
+class NumArray:
+
+    def __init__(self, nums: List[int]):
+        # prefix[i] is the sum of the first i numbers
+        self.prefix = [0]
+        for number in nums:
+            self.prefix.append(self.prefix[-1] + number)
+
+    def sumRange(self, left: int, right: int) -> int:
+        return self.prefix[right + 1] - self.prefix[left]
+
+
+###########################################################
+# 338. Counting Bits
+
+class Solution:
+    def countBits(self, n: int) -> List[int]:
+        bits = [0] * (n + 1)
+        for i in range(1, n + 1):
+            # i // 2 is i without its last bit, i % 2 is the last bit
+            bits[i] = bits[i // 2] + i % 2
+        return bits
+
+
+###########################################################
+# 374. Guess Number Higher or Lower
+
+class Solution:
+    def guessNumber(self, n: int) -> int:
+        first = 1
+        last = n
+        while first <= last:
+            mid = (first + last) // 2
+            result = guess(mid)
+            if result == 0:
+                return mid
+            elif result == -1:
+                last = mid - 1
+            else:
+                first = mid + 1
+        return -1
+
+
+###########################################################
+# 412. Fizz Buzz
+
+class Solution:
+    def fizzBuzz(self, n: int) -> List[str]:
+        answer = []
+        for i in range(1, n + 1):
+            if i % 15 == 0:
+                answer.append("FizzBuzz")
+            elif i % 3 == 0:
+                answer.append("Fizz")
+            elif i % 5 == 0:
+                answer.append("Buzz")
+            else:
+                answer.append(str(i))
+        return answer
+
+
+###########################################################
+# 461. Hamming Distance
+
+class Solution:
+    def hammingDistance(self, x: int, y: int) -> int:
+        # xor has a 1 wherever the bits of x and y are different
+        diff = x ^ y
+        count = 0
+        while diff > 0:
+            count += diff % 2
+            diff = diff // 2
+        return count
+
+
+###########################################################
+# 938. Range Sum of BST
+
+class Solution:
+    def rangeSumBST(self, root: Optional[TreeNode], low: int, high: int) -> int:
+        if not root:
+            return 0
+        total = 0
+        if low <= root.val <= high:
+            total += root.val
+        return total + self.rangeSumBST(root.left, low, high) + self.rangeSumBST(root.right, low, high)
+
+
+###########################################################
+# 942. DI String Match
+
+class Solution:
+    def diStringMatch(self, s: str) -> List[int]:
+        low = 0
+        high = len(s)
+        result = []
+        # for I use the smallest number left, for D use the biggest
+        for char in s:
+            if char == "I":
+                result.append(low)
+                low += 1
+            else:
+                result.append(high)
+                high -= 1
+        result.append(low)
+        return result
+
+
+###########################################################
+# 944. Delete Columns to Make Sorted
+
+class Solution:
+    def minDeletionSize(self, strs: List[str]) -> int:
+        count = 0
+        for j in range(len(strs[0])):
+            column = []
+            for word in strs:
+                column.append(word[j])
+            if column != sorted(column):
+                count += 1
+        return count
+
+
+###########################################################
+# 1021. Remove Outermost Parentheses
+
+class Solution:
+    def removeOuterParentheses(self, s: str) -> str:
+        result = ""
+        depth = 0
+        for char in s:
+            if char == "(":
+                # only keep it if it is not the outer opening bracket
+                if depth > 0:
+                    result += char
+                depth += 1
+            else:
+                depth -= 1
+                if depth > 0:
+                    result += char
+        return result
+
+
+###########################################################
+# 1022. Sum of Root To Leaf Binary Numbers
+
+class Solution:
+    def sumRootToLeaf(self, root: Optional[TreeNode]) -> int:
+        def walk(node, current):
+            if not node:
+                return 0
+            # shift left by one bit and add this node's bit
+            current = current * 2 + node.val
+            if not node.left and not node.right:
+                return current
+            return walk(node.left, current) + walk(node.right, current)
+
+        return walk(root, 0)
+
+
+###########################################################
+# 1051. Height Checker
+
+class Solution:
+    def heightChecker(self, heights: List[int]) -> int:
+        expected = sorted(heights)
+        count = 0
+        for i in range(len(heights)):
+            if heights[i] != expected[i]:
+                count += 1
+        return count
+
+
+###########################################################
+# 1108. Defanging an IP Address
+
+class Solution:
+    def defangIPaddr(self, address: str) -> str:
+        return address.replace(".", "[.]")
+
+
+###########################################################
+# 1122. Relative Sort Array
+
+class Solution:
+    def relativeSortArray(self, arr1: List[int], arr2: List[int]) -> List[int]:
+        d = {}
+        for number in arr1:
+            if number not in d:
+                d[number] = 1
+            else:
+                d[number] += 1
+
+        result = []
+        # first the numbers in arr2's order
+        for number in arr2:
+            result.extend([number] * d[number])
+            d[number] = 0
+
+        # then whatever is left, in sorted order
+        leftovers = []
+        for number in d:
+            leftovers.extend([number] * d[number])
+        result.extend(sorted(leftovers))
+        return result
+
+
+###########################################################
+# 15. 3Sum (work in progress)
+
+import itertools
+
+def threeSum(nums: list[int]) -> list[list[int]]:
+    def sumlinds(linds, listt):
+        sum = 0 
+        for index in linds: 
+            sum += listt[index]
+        return sum == 0
+    
+    def number(lst):
+        listt = []
+        for index in lst:
+            listt.append(nums[index])
+        return listt
+
+    indiceslist = range(0, len(nums))
+    listoflists = list(itertools.combinations(indiceslist, 3))
+    
+    listofvalidinds = list(filter(lambda l: sumlinds(l, nums), listoflists))
+
+    listofgroups = list(map(number, listofvalidinds))
+    listt = list(map(lambda l: tuple(l), listofgroups))
+    newlist = []
+
+    for items in listt: 
+        newlist.append(sorted(list(items)))
+
+    newset = set(newlist)
+
+    return newset
+
+lst = threeSum([-1,0,1,2,-1,-4])
+print(lst)
+
+
