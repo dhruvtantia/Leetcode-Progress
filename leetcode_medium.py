@@ -218,3 +218,53 @@ class Solution:
         if negative:
             return 1 / result
         return result
+
+
+###########################################################
+# 24. Swap Nodes in Pairs
+
+class Solution:
+    def swapPairs(self, head: ListNode | None) -> ListNode | None:
+        dummy = ListNode(0, head)
+        prev = dummy
+        while prev.next and prev.next.next:
+            first = prev.next
+            second = first.next
+            # swap the pair by rewiring the links
+            first.next = second.next
+            second.next = first
+            prev.next = second
+            prev = first
+        return dummy.next
+
+
+###########################################################
+# 49. Group Anagrams
+
+class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        groups = {}
+        for word in strs:
+            key = "".join(sorted(word))  # anagrams share the same sorted letters
+            if key not in groups:
+                groups[key] = []
+            groups[key].append(word)
+        return list(groups.values())
+
+
+###########################################################
+# 78. Subsets
+
+class Solution:
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        result = []
+
+        def backtrack(start, current):
+            result.append(current[:])
+            for i in range(start, len(nums)):
+                current.append(nums[i])
+                backtrack(i + 1, current)
+                current.pop()
+
+        backtrack(0, [])
+        return result

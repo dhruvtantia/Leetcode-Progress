@@ -2374,6 +2374,95 @@ class Solution:
 
 
 ###########################################################
+# 463. Island Perimeter
+
+class Solution:
+    def islandPerimeter(self, grid: List[List[int]]) -> int:
+        perimeter = 0
+        for r in range(len(grid)):
+            for c in range(len(grid[0])):
+                if grid[r][c] == 1:
+                    perimeter += 4
+                    # a shared edge with the cell above or to the left hides 2 sides
+                    if r > 0 and grid[r - 1][c] == 1:
+                        perimeter -= 2
+                    if c > 0 and grid[r][c - 1] == 1:
+                        perimeter -= 2
+        return perimeter
+
+
+###########################################################
+# 476. Number Complement
+
+class Solution:
+    def findComplement(self, num: int) -> int:
+        # find the first power of two above num; one less than it is all 1s
+        power = 1
+        while power <= num:
+            power *= 2
+        return (power - 1) - num
+
+
+###########################################################
+# 496. Next Greater Element I
+
+class Solution:
+    def nextGreaterElement(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        result = []
+        for x in nums1:
+            start = nums2.index(x)
+            answer = -1
+            for j in range(start + 1, len(nums2)):
+                if nums2[j] > x:
+                    answer = nums2[j]
+                    break
+            result.append(answer)
+        return result
+
+
+###########################################################
+# 509. Fibonacci Number
+
+class Solution:
+    def fib(self, n: int) -> int:
+        a, b = 0, 1
+        for _ in range(n):
+            a, b = b, a + b
+        return a
+
+
+###########################################################
+# 557. Reverse Words in a String III
+
+class Solution:
+    def reverseWords(self, s: str) -> str:
+        words = s.split(" ")
+        return " ".join(word[::-1] for word in words)
+
+
+###########################################################
+# 561. Array Partition
+
+class Solution:
+    def arrayPairSum(self, nums: List[int]) -> int:
+        # after sorting, pair neighbours; the smaller of each pair is every other number
+        nums.sort()
+        total = 0
+        for i in range(0, len(nums), 2):
+            total += nums[i]
+        return total
+
+
+###########################################################
+# 575. Distribute Candies
+
+class Solution:
+    def distributeCandies(self, candyType: List[int]) -> int:
+        # she can eat n/2 candies, but never more kinds than exist
+        return min(len(set(candyType)), len(candyType) // 2)
+
+
+###########################################################
 # 15. 3Sum (work in progress)
 
 import itertools
