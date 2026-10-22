@@ -2500,3 +2500,124 @@ lst = threeSum([-1,0,1,2,-1,-4])
 print(lst)
 
 
+###########################################################
+# 383. Ransom Note
+
+class Solution:
+    def canConstruct(self, ransomNote: str, magazine: str) -> bool:
+        # count every letter in the magazine, then use them up for the note
+        counts = {}
+        for ch in magazine:
+            counts[ch] = counts.get(ch, 0) + 1
+        for ch in ransomNote:
+            if counts.get(ch, 0) == 0:
+                return False
+            counts[ch] -= 1
+        return True
+
+
+###########################################################
+# 401. Binary Watch
+
+class Solution:
+    def readBinaryWatch(self, turnedOn: int) -> list[str]:
+        result = []
+        # try every possible time and keep the ones with the right number of lit LEDs
+        for hour in range(12):
+            for minute in range(60):
+                if bin(hour).count("1") + bin(minute).count("1") == turnedOn:
+                    result.append(str(hour) + ":" + str(minute).zfill(2))
+        return result
+
+
+###########################################################
+# 404. Sum of Left Leaves
+
+class Solution:
+    def sumOfLeftLeaves(self, root: Optional[TreeNode]) -> int:
+        if root is None:
+            return 0
+        total = 0
+        # a left child with no children of its own is a left leaf
+        if root.left is not None and root.left.left is None and root.left.right is None:
+            total += root.left.val
+        total += self.sumOfLeftLeaves(root.left)
+        total += self.sumOfLeftLeaves(root.right)
+        return total
+
+
+###########################################################
+# 405. Convert a Number to Hexadecimal
+
+class Solution:
+    def toHex(self, num: int) -> str:
+        if num == 0:
+            return "0"
+        if num < 0:
+            # two's complement for 32 bits
+            num += 2 ** 32
+        digits = "0123456789abcdef"
+        result = ""
+        while num > 0:
+            result = digits[num % 16] + result
+            num //= 16
+        return result
+
+
+###########################################################
+# 409. Longest Palindrome
+
+class Solution:
+    def longestPalindrome(self, s: str) -> int:
+        counts = {}
+        for ch in s:
+            counts[ch] = counts.get(ch, 0) + 1
+        length = 0
+        has_odd = False
+        for c in counts.values():
+            # every pair of letters can sit on both sides of the palindrome
+            length += (c // 2) * 2
+            if c % 2 == 1:
+                has_odd = True
+        # one leftover letter can go in the middle
+        if has_odd:
+            length += 1
+        return length
+
+
+###########################################################
+# 415. Add Strings
+
+class Solution:
+    def addStrings(self, num1: str, num2: str) -> str:
+        i = len(num1) - 1
+        j = len(num2) - 1
+        carry = 0
+        digits = []
+        # add digit by digit from the right, like on paper
+        while i >= 0 or j >= 0 or carry:
+            total = carry
+            if i >= 0:
+                total += ord(num1[i]) - ord("0")
+                i -= 1
+            if j >= 0:
+                total += ord(num2[j]) - ord("0")
+                j -= 1
+            digits.append(chr(total % 10 + ord("0")))
+            carry = total // 10
+        return "".join(reversed(digits))
+
+
+###########################################################
+# 434. Number of Segments in a String
+
+class Solution:
+    def countSegments(self, s: str) -> int:
+        count = 0
+        for i in range(len(s)):
+            # a segment starts at a non-space that follows a space (or the start)
+            if s[i] != " " and (i == 0 or s[i - 1] == " "):
+                count += 1
+        return count
+
+

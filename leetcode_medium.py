@@ -268,3 +268,67 @@ class Solution:
 
         backtrack(0, [])
         return result
+
+
+###########################################################
+# 2. Add Two Numbers
+
+class Solution:
+    def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:
+        dummy = ListNode()
+        tail = dummy
+        carry = 0
+        while l1 or l2 or carry:
+            total = carry
+            if l1:
+                total += l1.val
+                l1 = l1.next
+            if l2:
+                total += l2.val
+                l2 = l2.next
+            tail.next = ListNode(total % 10)
+            tail = tail.next
+            carry = total // 10
+        return dummy.next
+
+
+###########################################################
+# 6. Zigzag Conversion
+
+class Solution:
+    def convert(self, s: str, numRows: int) -> str:
+        if numRows == 1 or numRows >= len(s):
+            return s
+        rows = [""] * numRows
+        row = 0
+        step = 1
+        # walk down the rows, then back up, dropping one letter in each row
+        for ch in s:
+            rows[row] += ch
+            if row == 0:
+                step = 1
+            elif row == numRows - 1:
+                step = -1
+            row += step
+        return "".join(rows)
+
+
+###########################################################
+# 11. Container With Most Water
+
+class Solution:
+    def maxArea(self, height: list[int]) -> int:
+        left = 0
+        right = len(height) - 1
+        best = 0
+        while left < right:
+            width = right - left
+            best = max(best, width * min(height[left], height[right]))
+            # move the shorter wall inward, it can't do better staying put
+            if height[left] < height[right]:
+                left += 1
+            else:
+                right -= 1
+        return best
+
+
