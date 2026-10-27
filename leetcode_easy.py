@@ -2621,3 +2621,122 @@ class Solution:
         return count
 
 
+###########################################################
+# 492. Construct the Rectangle
+
+class Solution:
+    def constructRectangle(self, area: int) -> list[int]:
+        # start from the square root and walk down until the width divides the area
+        width = int(area ** 0.5)
+        while area % width != 0:
+            width -= 1
+        return [area // width, width]
+
+
+###########################################################
+# 566. Reshape the Matrix
+
+class Solution:
+    def matrixReshape(self, mat: List[List[int]], r: int, c: int) -> List[List[int]]:
+        m, n = len(mat), len(mat[0])
+        if m * n != r * c:
+            return mat
+        result = [[0] * c for _ in range(r)]
+        # walk through the original cells in order and drop each into the next new cell
+        for i in range(m * n):
+            result[i // c][i % c] = mat[i // n][i % n]
+        return result
+
+
+###########################################################
+# 657. Robot Return to Origin
+
+class Solution:
+    def judgeCircle(self, moves: str) -> bool:
+        x = 0
+        y = 0
+        for move in moves:
+            if move == "U":
+                y += 1
+            elif move == "D":
+                y -= 1
+            elif move == "L":
+                x -= 1
+            else:
+                x += 1
+        return x == 0 and y == 0
+
+
+###########################################################
+# 661. Image Smoother
+
+class Solution:
+    def imageSmoother(self, img: list[list[int]]) -> list[list[int]]:
+        m, n = len(img), len(img[0])
+        result = [[0] * n for _ in range(m)]
+        for i in range(m):
+            for j in range(n):
+                total = 0
+                count = 0
+                # add up the cell and its neighbours that are inside the grid
+                for x in range(i - 1, i + 2):
+                    for y in range(j - 1, j + 2):
+                        if 0 <= x < m and 0 <= y < n:
+                            total += img[x][y]
+                            count += 1
+                result[i][j] = total // count
+        return result
+
+
+###########################################################
+# 682. Baseball Game
+
+class Solution:
+    def calPoints(self, operations: list[str]) -> int:
+        scores = []
+        for op in operations:
+            if op == "+":
+                scores.append(scores[-1] + scores[-2])
+            elif op == "D":
+                scores.append(scores[-1] * 2)
+            elif op == "C":
+                scores.pop()
+            else:
+                scores.append(int(op))
+        return sum(scores)
+
+
+###########################################################
+# 693. Binary Number with Alternating Bits
+
+class Solution:
+    def hasAlternatingBits(self, n: int) -> bool:
+        previous = n % 2
+        n //= 2
+        while n > 0:
+            current = n % 2
+            # two neighbouring bits must differ
+            if current == previous:
+                return False
+            previous = current
+            n //= 2
+        return True
+
+
+###########################################################
+# 696. Count Binary Substrings
+
+class Solution:
+    def countBinarySubstrings(self, s: str) -> int:
+        previous = 0
+        current = 1
+        result = 0
+        for i in range(1, len(s)):
+            if s[i] == s[i - 1]:
+                current += 1
+            else:
+                # a group of 0s next to a group of 1s gives min(size) valid substrings
+                result += min(previous, current)
+                previous = current
+                current = 1
+        return result + min(previous, current)

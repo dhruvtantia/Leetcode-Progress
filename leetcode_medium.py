@@ -332,3 +332,66 @@ class Solution:
         return best
 
 
+###########################################################
+# 48. Rotate Image
+
+class Solution:
+    def rotate(self, matrix: list[list[int]]) -> None:
+        n = len(matrix)
+        # flip over the diagonal, then reverse every row
+        for i in range(n):
+            for j in range(i + 1, n):
+                matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
+        for row in matrix:
+            row.reverse()
+
+
+###########################################################
+# 59. Spiral Matrix II
+
+class Solution:
+    def generateMatrix(self, n: int) -> list[list[int]]:
+        grid = [[0] * n for _ in range(n)]
+        top, bottom, left, right = 0, n - 1, 0, n - 1
+        num = 1
+        while top <= bottom and left <= right:
+            for j in range(left, right + 1):
+                grid[top][j] = num
+                num += 1
+            top += 1
+            for i in range(top, bottom + 1):
+                grid[i][right] = num
+                num += 1
+            right -= 1
+            for j in range(right, left - 1, -1):
+                if top <= bottom:
+                    grid[bottom][j] = num
+                    num += 1
+            bottom -= 1
+            for i in range(bottom, top - 1, -1):
+                if left <= right:
+                    grid[i][left] = num
+                    num += 1
+            left += 1
+        return grid
+
+
+###########################################################
+# 77. Combinations
+
+class Solution:
+    def combine(self, n: int, k: int) -> list[list[int]]:
+        result = []
+        path = []
+
+        def backtrack(start):
+            if len(path) == k:
+                result.append(path[:])
+                return
+            for num in range(start, n + 1):
+                path.append(num)
+                backtrack(num + 1)
+                path.pop()
+
+        backtrack(1)
+        return result
